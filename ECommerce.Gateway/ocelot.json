@@ -1,0 +1,59 @@
+{
+  "Routes": [
+    {
+      "DownstreamPathTemplate": "/api/Customer",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": "5001"
+        }
+      ],
+      "FileCacheOptions": {
+        "TtlSeconds": 30,
+        "Region": "customercaching"
+      },
+      "UpstreamPathTemplate": "/Customer",
+      "UpstreamHttpMethod": [ "GET" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer",
+        "AllowedScopes": []
+      }
+    },
+    {
+      "DownstreamPathTemplate": "/api/Product",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": "5002"
+        }
+      ],
+      "RateLimitOptions": {
+        "ClientWhitelist": [],
+        "EnableRateLimiting": true,
+        "Period": "5s",
+        "PeriodTimespan": 1,
+        "Limit": 1
+      },
+      "UpstreamPathTemplate": "/Product",
+      "UpstreamHttpMethod": [ "GET" ]
+    }
+  ],
+  "GlobalConfiguration": {
+    "RequestIdKey": "X-Correlation-Id",
+    "BaseUrl": "http://localhost:5000"
+  },
+  "SwaggerEndPoints": [
+    {
+      "Key": "Customer",
+      "Config": [
+        {
+          "Name": "Ecommerce",
+          "Version": "v1",
+          "Url": "http://localhost:5000/swagger/"
+        }
+      ]
+    }
+  ]
+}
