@@ -29,6 +29,18 @@ builder.Services
                 new HasScopeRequirement("read:messages", domain)
             )
         );
+        options.AddPolicy(
+            "admin-scope",
+            policy => policy.Requirements.Add(
+                new HasScopeRequirement("admin", domain)
+            )
+        );
+        options.AddPolicy(
+            "customer-scope",
+            policy => policy.Requirements.Add(
+                new HasScopeRequirement("customer", domain)
+            )
+        );
     });
 
 builder.Services.AddSingleton<IAuthorizationHandler, HasScopeHandler>();

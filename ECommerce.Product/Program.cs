@@ -7,6 +7,8 @@ var builder = WebApplication.CreateBuilder(args);
 // Create an instance of the service collection
 var services = builder.Services;
 
+services.AddScoped<ProductDbContext>();
+
 // Register the IProductRepository interface and its implementation
 services.AddScoped<IProductRepository, ProductRepository>();
 

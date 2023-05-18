@@ -1,44 +1,43 @@
-using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
 
-namespace ECommerce.Product
+namespace ECommerce.Product;
+
+public class ProductRepository : IProductRepository
 {
-    public class ProductRepository : IProductRepository
+    private readonly ProductDbContext _dbContext;
+    public ProductRepository(ProductDbContext dbContext)
     {
-        private readonly List<Product> products = new List<Product>();
-        public ProductRepository()
-        {
-            products.Add(new Product
-            {
-                Id = Guid.NewGuid(),
-                Code = "P0001",
-                Name = "Basic white t-shirt",
-                QuantityInStock = 15,
-                UnitPrice = 125000
-            });
+        _dbContext = dbContext;
+    }
+    public async Task<Product> GetByIdAsync(Guid id)
+    {
+        return await _dbContext.Set<Product>().FindAsync(id);
+    }
 
-            products.Add(new Product
-            {
-                Id = Guid.NewGuid(),
-                Code = "P0002",
-                Name = "Black sweatshirt with zip",
-                QuantityInStock = 25,
-                UnitPrice = 135000
-            });
+    public async Task<List<Product>> GetAllAsync()
+    {
+        return await _dbContext.Set<Product>().ToListAsync();
+    }
 
-            products.Add(new Product
-            {
-                Id = Guid.NewGuid(),
-                Code = "P0003",
-                Name = "Oversized green printed t-shirt ",
-                QuantityInStock = 20,
-                UnitPrice = 115000
-            });
-        }
-        public Task<List<Product>> GetAllProducts()
-        {
-            return Task.FromResult(products);
-        }
+    public async Task<EntityEntry<Product>> AddAsync(Product product)
+    {
+        var newProduct = await _dbContext.Set<Product>().AddAsync(product);
+        await _dbContext.SaveChangesAsync();
+        return newProduct;
+    }
+
+    public async Task UpdateAsync(Guid id, Product product)
+    {
+        var productToUpdate = await GetByIdAsync(id);
+        _dbContext.Set<Product>().Update(product);
+        await _dbContext.SaveChangesAsync();
+    }
+
+    public async Task DeleteAsync(Guid id)
+    {
+        var product = await GetByIdAsync(id);
+        _dbContext.Set<Product>().Remove(product);
+        await _dbContext.SaveChangesAsync();
     }
 }

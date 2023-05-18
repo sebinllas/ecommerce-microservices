@@ -14,10 +14,10 @@
         "Region": "customercaching"
       },
       "UpstreamPathTemplate": "/Customer",
-      "UpstreamHttpMethod": [ "GET" ],
+      "UpstreamHttpMethod": [ "GET", "POST"  ],
       "AuthenticationOptions": {
         "AuthenticationProviderKey": "Bearer",
-        "AllowedScopes": []
+        "AllowedScopes": ["admin-scope"]
       }
     },
     {
@@ -37,9 +37,15 @@
         "Limit": 1
       },
       "UpstreamPathTemplate": "/Product",
-      "UpstreamHttpMethod": [ "GET" ]
+      "UpstreamHttpMethod": [ "GET"],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer",
+        "AllowedScopes": ["customer-scope"]
+      }
     }
   ],
+  
+  
   "GlobalConfiguration": {
     "RequestIdKey": "X-Correlation-Id",
     "BaseUrl": "http://localhost:5000"
